@@ -1,10 +1,29 @@
 # Vehicle Maintenance Tracker
 
-A comprehensive web application for tracking vehicle maintenance history and managing service reminders. Built as part of the P3 Group technical assessment.
+A simple web application for tracking vehicle maintenance history and managing service reminders.
+
+Built as part of the P3 Group Technical Assessment to show my problem-solving approach, system design, and how I apply AI thinking in real-world scenarios.
+
+## Problem-Solving Approach
+
+Since this challenge was based in a domain I’m not familiar with (vehicle maintenance), I started by breaking the problem down into something understandable and logical.
+
+1. Understanding the domain:
+I looked into what types of maintenance are common for vehicles, like oil changes, tire rotations, and inspections, and what intervals they usually follow. That helped me design realistic reminder rules.
+
+2. Structuring the system:
+Before writing any code, I mapped out the main entities: Vehicle, Maintenance Event, and Reminder Logic. I kept the relationships simple but clear to make the system easy to scale.
+
+3. Keeping it small but solid:
+I focused on building something clean and maintainable rather than overcomplicating things. The goal was to show clarity in how I think and how I organize projects, not to create a full production system
+
+4. Planning for AI later:
+Since the dataset for a new system would be small, I didn’t include actual ML models yet. Instead, I outlined how predictive maintenance could be added once enough data is collected.
 
 ## Overview
+The Vehicle Maintenance Tracker helps users keep track of their car’s service history and receive reminders when the next maintenance is due.
+The system uses rule-based logic to calculate service reminders and can easily grow into a data-driven predictive system later on.
 
-This system helps vehicle owners maintain their cars by tracking service history and providing intelligent reminders for upcoming maintenance. The application features a clean, intuitive interface with a robust backend API.
 
 ## Features
 
@@ -12,7 +31,7 @@ This system helps vehicle owners maintain their cars by tracking service history
 - **Vehicle Management**: Add and manage multiple vehicles with model, year, and current mileage
 - **Maintenance History**: Record all service events including type, date, mileage, cost, and notes
 - **Smart Reminders**: Rule-based system that calculates when services are due based on both mileage and time intervals
-- **Status Indicators**: Visual colour-coded alerts for overdue, due soon, and OK maintenance items
+
 
 ### Technical Highlights
 - RESTful API architecture
@@ -24,9 +43,9 @@ This system helps vehicle owners maintain their cars by tracking service history
 ## Technology Stack
 
 ### Backend
-- **FastAPI**: Modern Python web framework for building APIs
+- **FastAPI**: for fast, modern API development
 - **Pydantic**: Data validation using Python type annotations
-- **Uvicorn**: ASGI server for running the application
+- **Uvicorn**: for running the application locally
 
 ### Frontend
 - **React**: Component-based UI library
@@ -110,6 +129,7 @@ The application will open at `http://localhost:3000`
 ### Vehicles
 - `GET /vehicles/` - Retrieve all vehicles
 - `POST /vehicles/` - Add a new vehicle
+- `PELETE /vehicles/{vehicle_id}` - Delete a vehicle
 
 ### Maintenance
 - `GET /maintenance/history/{vehicle_id}` - Get maintenance history for a vehicle
@@ -133,90 +153,100 @@ Reminders are prioritised as:
 - **Due Soon**: Within 1,000 km or 30 days of service
 - **OK**: Service not yet due
 
-## AI/ML Enhancement Opportunities
+## AI/ML Component Note
+Right now, the system uses rule-based reminders (e.g., oil change every 5,000 km or 180 days).
+While this works, it assumes every driver and vehicle behave the same, which isn’t true in reality.
 
-### 1. Predictive Maintenance
-**Problem**: Reactive maintenance can lead to unexpected breakdowns and higher costs.
+That’s where Machine Learning or Generative AI could add real business value.
 
-**Solution**: Implement a machine learning model that predicts component failures before they occur.
 
-**Approach**:
-- Train on historical maintenance data across similar vehicle models
-- Features: vehicle age, mileage, service history, driving conditions
-- Output: Probability of failure for each component within next 30/60/90 days
-- Model: Random Forest or Gradient Boosting for tabular data
-
-**Business Value**:
-- Reduce unexpected breakdowns by 30-40%
-- Lower long-term maintenance costs through preventive action
-- Improve customer satisfaction and safety
-
-### 2. Cost Optimisation & Anomaly Detection
-**Problem**: Customers don't know if they're paying fair prices for services.
-
-**Solution**: Analyse service costs across the user base to identify optimal pricing and detect overcharging.
+### 1. Predictive Maintenance Model (Machine Learning)
+**Goal*: Predict when a specific vehicle is likely to need maintenance based on historical data.
 
 **Approach**:
-- Clustering similar services (location, vehicle type, service type)
-- Anomaly detection on cost outliers
-- Provide cost recommendations and average price ranges
-- Model: Isolation Forest for anomaly detection, K-means for clustering
+- Collect data on:
+
+  - Vehicle type, model, and age
+
+  - Driving frequency and mileage patterns
+
+  - Maintenance history (services, replacements, failures)
+
+  - Environmental conditions (temperature, terrain, location)
+
+- Train a regression model or time-series model (like XGBoost, LSTM, or Prophet) to forecast the next likely maintenance date or mileage.
+
 
 **Business Value**:
-- Build trust through transparent pricing insights
-- Help customers save 15-20% on maintenance costs
-- Competitive advantage in the market
+- Prevent costly breakdowns and improve safety
+- Let workshops schedule maintenance before issues happen
+- Help customers save money and plan expenses
 
-### 3. Personalised Smart Reminders
-**Problem**: Generic reminders don't account for individual driving habits and patterns.
-
-**Solution**: Machine learning system that adapts to each user's behaviour.
+### 2. Generative AI Assistant (LLM Integration)
+**Goal**: Help users understand their maintenance history, upcoming services, and even learn about car care through natural conversation.
 
 **Approach**:
-- Track when users actually service their vehicles vs. when reminded
-- Learn patterns: highway vs. city driving, seasonal usage
-- Adjust reminder timing and urgency based on individual patterns
-- Model: Time series analysis with LSTM for pattern recognition
+- Use an LLM (like GPT or a fine-tuned smaller model) connected to the system’s API.
+- Users can ask questions like:
+
+  “When should I replace my brake pads?”
+  “What maintenance have I done this year?”
+  “Summarize my car’s last 5 services.”
+- The LLM would:
+   - Retrieve structured data from the API
+
+   - Generate an easy-to-understand summary or advice
 
 **Business Value**:
-- Increase reminder engagement by 40-50%
-- Reduce notification fatigue
-- More relevant, actionable insights for users
+- Turns the system into a smart, user-friendly assistant
+- Reduces customer confusion about maintenance
+- Could evolve into a chatbot for car dealerships or workshops
 
-### 4. Vehicle Health Score
-**Problem**: Users can't easily understand their vehicle's overall condition.
-
-**Solution**: Generate a comprehensive health score (0-100) using multiple factors.
+### 3. Anomaly Detection (AI-Assisted Alerts)
+**Goal*: Detect unusual maintenance patterns or potential fraud (for business use cases).
 
 **Approach**:
-- Weighted scoring model considering:
-  - Maintenance compliance rate
-  - Time since last major services
-  - Vehicle age and mileage
-  - Historical issue frequency
-- Explainable AI to show which factors impact the score
-- Model: Ensemble of regression models with interpretability
+- Use unsupervised learning to detect outliers:
+  - A car suddenly needing too many oil changes
+  - High mileage jumps in short timeframes
+  - Missing or inconsistent service logs
+- Alerts could help service centers maintain data integrity or prevent misuse.
+
 
 **Business Value**:
-- Simple, actionable metric for vehicle condition
-- Drive engagement with maintenance recommendations
-- Aid in resale value estimation
+- Improves reliability of data
+- Detects fraudulent or incorrect entries early
 
-## Implementation Considerations
+### 4. AI-Driven Recommendations
+**Goal**: Use pattern recognition to give users proactive insights.
 
-For a proof of concept, I would recommend starting with **Cost Optimisation** because:
-1. Requires minimal additional data collection
-2. Provides immediate, tangible value to users
-3. Can be implemented with existing maintenance cost data
-4. Demonstrates clear ROI for the business
-5. Simpler to explain and validate than predictive models
+*Examples:
 
-## Development Notes
+- “You usually drive 800 km per week — your next service is due in 3 weeks.”
+- “Based on your usage and climate, consider checking your battery earlier.”
+- “Your fuel efficiency dropped by 15% — might be time for an air filter change.”
 
-- Development time: Approximately 2-3 hours
-- Focus: Clean, maintainable code over extensive features
-- Architecture: Separation of concerns with modular design
-- Testing: Manual testing via API documentation and frontend UI
+## 5. Data Needed for ML Expansion
+
+To implement these ideas realistically, we’d need:
+
+- Vehicle usage logs (mileage over time)-Maintenance history (type, cost, outcome)
+- Optional contextual data (weather, road conditions)
+- User feedback (was the reminder accurate or too early?)
+
+Even a small dataset can be used to create a proof-of-concept predictive model that evolves over time.
+
+## Future Vision
+
+This app could evolve into a “Smart Car Care Companion”, combining:
+
+- Predictive analytics for timing
+
+- AI-generated explanations
+
+- Integrated chat or voice assistant
+
+- Business dashboard for workshops (showing predictive insights across customers)
 
 ## Future Enhancements
 
